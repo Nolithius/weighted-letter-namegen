@@ -165,7 +165,7 @@ package nolithius.namegen.weightedletter
 		 */
 		private function getIntermediateLetter(letterBefore:String, letterAfter:String):String
 		{
-			if(letterBefore && letterAfter)
+			if(letterBefore && letterAfter && letters[letterBefore])
 			{
 				// First grab all letters that come after the 'letterBefore'
 				var letterCandidates:Dictionary = letters[letterBefore].nextLetters.letters;
@@ -174,19 +174,24 @@ package nolithius.namegen.weightedletter
 				var bestFitScore:uint = 0;
 				
 				// Step through candidates, and return best scoring letter
-				for (var letter in letterCandidates)
+				for (var letter:String in letterCandidates)
 				{
-					var weightedLetterGroup:WeightedLetterGroup = letters[letter].nextLetters;
-					var letterCounter:WeightedLetterCounter = weightedLetterGroup.letters[letterAfter];
-					
-					if (letterCounter)
-					{
-						if (letterCounter.count > bestFitScore)
-						{
-							bestFitLetter = letter;
-							bestFitScore = letterCounter.count;
-						}
-					}
+                    var letterInNextLetters:WeightedLetter = letters[letter];
+
+                    if (letterInNextLetters)
+                    {
+                        var weightedLetterGroup:WeightedLetterGroup = letterInNextLetters.nextLetters;
+                        var letterCounter:WeightedLetterCounter = weightedLetterGroup.letters[letterAfter];
+
+                        if (letterCounter)
+                        {
+                            if (letterCounter.count > bestFitScore)
+                            {
+                                bestFitLetter = letter;
+                                bestFitScore = letterCounter.count;
+                            }
+                        }
+                    }
 				}
 				
 				return bestFitLetter;
@@ -261,8 +266,15 @@ package nolithius.namegen.weightedletter
 		private function getRandomNextLetter(letter:String):String
 		{
 			var weightedLetter:WeightedLetter = letters[letter];
-			
-			return pickRandomElementFromArray(weightedLetter.nextLetters.letterSamples) as String;
+
+            if (weightedLetter)
+            {
+			    return pickRandomElementFromArray(weightedLetter.nextLetters.letterSamples) as String;
+            }
+            else
+            {
+                return null;
+            }
 		}
 	}
 }

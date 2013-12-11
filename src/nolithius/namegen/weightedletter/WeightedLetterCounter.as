@@ -6,8 +6,8 @@ package nolithius.namegen.weightedletter
 	 */
 	public class WeightedLetterCounter
 	{
-		var letter:String;
-		var count:uint = 0;
+		public var letter:String;
+		public var count:uint = 0;
 		
 		
 		public function WeightedLetterCounter(p_letter:String) 
